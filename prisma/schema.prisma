@@ -1,0 +1,145 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// ===== Enums =====
+enum Modalidad {
+  ALEMAN
+  FRANCES
+}
+
+enum TipoCuota {
+  ORDINARIA
+  ADICIONAL
+}
+
+/// ===== Tablas =====
+
+model Variables {
+  idVariable   Int      @id @default(autoincrement())
+  descripcion  String   @unique
+  valor        Decimal  @db.Decimal(14, 4)
+
+  @@map("Variables")
+}
+
+model Rol {
+  idRol        Int      @id @default(autoincrement())
+  descripcion  String
+
+  socios       Socio[]
+
+  @@map("Rol")
+}
+
+model Socio {
+  idSocio          Int        @id @default(autoincrement())
+  nombre           String
+  fechaNacimiento  DateTime?
+  fechaIngreso     DateTime?
+  fechaSalida      DateTime?
+  montoAccion      Decimal?   @db.Decimal(14, 4)
+  multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
+  rolId            Int?
+  rol              Rol?       @relation(fields: [rolId], references: [idRol], onUpdate: Cascade)
+
+  // Relaciones
+  prestamos        Prestamo[]
+  acciones         Accion[]
+  pagos            Pago[]
+  solicitudes      Solicitud[]
+  votos            Votacion[]
+
+  @@map("Socio")
+}
+
+model Accion {
+  idAccion            Int       @id @default(autoincrement())
+  socioId             Int
+  fecha               DateTime
+  monto               Decimal   @db.Decimal(14, 4)
+  cantidadAcciones    Int       // número de acciones del monto depositado
+  periodo             String?   // ej: "2025-08" o el formato que definas
+  pesoMultiplicador   Int?      // número de meses que trabaja ese monto
+
+  socio               Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([socioId])
+  @@map("Accion")
+}
+
+model Prestamo {
+  idPrestamo               Int        @id @default(autoincrement())
+  socioId                  Int
+  monto                    Decimal    @db.Decimal(14, 4)
+  plazo                    Int        // meses
+  motivo                   String?
+  modalidad                Modalidad
+  saldoCapital             Decimal    @db.Decimal(14, 4)
+  saldoInteresOrdinario    Decimal    @db.Decimal(14, 4)
+  saldoInteresMoratorio    Decimal    @db.Decimal(14, 4)
+
+  socio                    Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
+  pagos                    Pago[]
+
+  @@index([socioId])
+  @@map("Prestamo")
+}
+
+model Pago {
+  idPago               Int       @id @default(autoincrement())
+  socioId              Int
+  prestamoId           Int?
+  fechaProyectada      DateTime
+  fechaReal            DateTime?
+  diasAtraso           Int?      // puedes calcularlo en app o trigger
+  monto                Decimal   @db.Decimal(14, 4)
+  interesOrdinario     Decimal   @db.Decimal(14, 4)
+  tipoCuota            TipoCuota
+  interesExtraordinario Decimal? @db.Decimal(14, 4)
+
+  socio                Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
+  prestamo             Prestamo? @relation(fields: [prestamoId], references: [idPrestamo], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([socioId])
+  @@index([prestamoId])
+  @@map("Pagos")
+}
+
+model Solicitud {
+  idSolicitud      Int        @id @default(autoincrement())
+  socioId          Int
+  fechaSolicitud   DateTime
+  detalle          String?
+  aprobada         Boolean    @default(false)
+  fechaAprobacion  DateTime?
+  cerrada          Boolean    @default(false)
+
+  socio            Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
+  votos            Votacion[]
+
+  @@index([socioId])
+  @@map("Solicitudes")
+}
+
+model Votacion {
+  idVoto        Int        @id @default(autoincrement())
+  socioId       Int
+  solicitudId   Int
+  fecha         DateTime   // si quieres separar hora, puedes agregar campo string "hora"
+  hora          String?    // opcional, si necesitas textual (HH:mm)
+  observacion   String?
+
+  socio         Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
+  solicitud     Solicitud  @relation(fields: [solicitudId], references: [idSolicitud], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([socioId])
+  @@index([solicitudId])
+  @@map("Votacion")
+}
