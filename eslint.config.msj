@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "lint": "eslint . --cache --cache-location .next/cache/eslint/",
+    "lint:fix": "eslint . --fix --cache --cache-location .next/cache/eslint/"
+  }
+}
