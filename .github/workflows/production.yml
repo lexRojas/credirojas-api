@@ -2,7 +2,7 @@ name: Production (migrate PROD + Vercel deploy)
 
 on:
   push:
-    branches: [main] # usa la rama que tengas como producción
+    branches: [master, main, prod] # usa la rama que tengas como producción
   workflow_dispatch: {}
 
 jobs:
