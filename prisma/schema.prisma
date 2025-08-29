@@ -26,7 +26,7 @@ model Variables {
   descripcion  String   @unique
   valor        Decimal  @db.Decimal(14, 4)
 
-  @@map("Variables")
+  @@map("variables")
 }
 
 model Rol {
@@ -35,7 +35,7 @@ model Rol {
 
   socios       Socio[]
 
-  @@map("Rol")
+  @@map("rol")
 }
 
 model Socio {
@@ -57,7 +57,7 @@ model Socio {
   solicitudes      Solicitud[]
   votos            Votacion[]
 
-  @@map("Socio")
+  @@map("socio")
 }
 
 model Accion {
@@ -72,7 +72,7 @@ model Accion {
   socio               Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([socioId])
-  @@map("Accion")
+  @@map("accion")
 }
 
 model Prestamo {
@@ -90,7 +90,7 @@ model Prestamo {
   pagos                    Pago[]
 
   @@index([socioId])
-  @@map("Prestamo")
+  @@map("prestamo")
 }
 
 model Pago {
@@ -110,7 +110,7 @@ model Pago {
 
   @@index([socioId])
   @@index([prestamoId])
-  @@map("Pagos")
+  @@map("pagos")
 }
 
 model Solicitud {
@@ -126,7 +126,7 @@ model Solicitud {
   votos            Votacion[]
 
   @@index([socioId])
-  @@map("Solicitudes")
+  @@map("solicitudes")
 }
 
 model Votacion {
@@ -142,5 +142,5 @@ model Votacion {
 
   @@index([socioId])
   @@index([solicitudId])
-  @@map("Votacion")
+  @@map("votacion")
 }
