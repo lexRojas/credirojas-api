@@ -64,7 +64,7 @@ model Accion {
   idAccion            Int       @id @default(autoincrement())
   socioId             Int
   fecha               DateTime
-  monto               Decimal   @db.Decimal(14, 4)
+  monto_colones       Decimal   @db.Decimal(14, 4)
   cantidadAcciones    Int       // número de acciones del monto depositado
   periodo             String?   // ej: "2025-08" o el formato que definas
   pesoMultiplicador   Int?      // número de meses que trabaja ese monto
