@@ -136,6 +136,8 @@ model Votacion {
   fecha         DateTime   // si quieres separar hora, puedes agregar campo string "hora"
   hora          String?    // opcional, si necesitas textual (HH:mm)
   observacion   String?
+  aprueba       Boolean    @default(false)
+
 
   socio         Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
   solicitud     Solicitud  @relation(fields: [solicitudId], references: [idSolicitud], onDelete: Cascade, onUpdate: Cascade)
