@@ -40,7 +40,8 @@ model Rol {
 
 model Socio {
   idSocio          Int        @id @default(autoincrement())
-  nombre_socio     String
+  nombre           String
+  apellido         String
   fechaNacimiento  DateTime?
   fechaIngreso     DateTime?
   fechaSalida      DateTime?
