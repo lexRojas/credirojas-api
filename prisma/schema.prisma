@@ -56,9 +56,9 @@ model Socio {
   idSocio          Int        @id @default(autoincrement())
   cedula           String?     
   nombre           String
-  fechaNacimiento  DateTime?
-  fechaIngreso     DateTime?
-  fechaSalida      DateTime?
+  fechaNacimiento  String?
+  fechaIngreso     String?
+  fechaSalida      String?
   montoAccion      Decimal?   @db.Decimal(14, 4)
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
   
@@ -79,7 +79,7 @@ model Socio {
 model Accion {
   idAccion            Int       @id @default(autoincrement())
   socioId             Int
-  fecha               DateTime
+  fecha               String
   monto_colones       Decimal   @db.Decimal(14, 4)
   cantidadAcciones    Int       // número de acciones del monto depositado
   periodo             String?   // ej: "2025-08" o el formato que definas
@@ -113,8 +113,8 @@ model Pago {
   idPago               Int       @id @default(autoincrement())
   socioId              Int
   prestamoId           Int?
-  fechaProyectada      DateTime
-  fechaReal            DateTime?
+  fechaProyectada      String
+  fechaReal            String?
   diasAtraso           Int?      // puedes calcularlo en app o trigger
   monto                Decimal   @db.Decimal(14, 4)
   interesOrdinario     Decimal   @db.Decimal(14, 4)
@@ -132,10 +132,10 @@ model Pago {
 model Solicitud {
   idSolicitud      Int        @id @default(autoincrement())
   socioId          Int
-  fechaSolicitud   DateTime
+  fechaSolicitud   String
   detalle          String?
   aprobada         Boolean    @default(false)
-  fechaAprobacion  DateTime?
+  fechaAprobacion  String?
   cerrada          Boolean    @default(false)
 
   socio            Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
@@ -149,7 +149,7 @@ model Votacion {
   idVoto        Int        @id @default(autoincrement())
   socioId       Int
   solicitudId   Int
-  fecha         DateTime   // si quieres separar hora, puedes agregar campo string "hora"
+  fecha         String   // si quieres separar hora, puedes agregar campo string "hora"
   hora          String?    // opcional, si necesitas textual (HH:mm)
   observacion   String?
   aprueba       Boolean    @default(false)
