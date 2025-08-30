@@ -54,14 +54,14 @@ model Rol {
 
 model Socio {
   idSocio          Int        @id @default(autoincrement())
+  cedula           String?     
   nombre           String
-  apellido         String
   fechaNacimiento  DateTime?
   fechaIngreso     DateTime?
   fechaSalida      DateTime?
   montoAccion      Decimal?   @db.Decimal(14, 4)
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
-  rolId            Int?
+  
   
 
   // Relaciones
@@ -72,6 +72,7 @@ model Socio {
   votos            Votacion[]
   usuario          Usuario?
 
+  @@index([cedula])  
   @@map("socio")
 }
 

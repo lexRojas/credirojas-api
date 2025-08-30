@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "./prisma";
+
 // @typescript-eslint/no-explicit-any
 export async function readJson<T = any>(req: NextRequest): Promise<T> {
   try {
@@ -34,7 +35,9 @@ export async function createHandler(
   modelName: keyof typeof prisma
 ) {
   const body = await readJson(req);
+  console.log(body);
   // @ts-expect-error porque si
+
   const created = await prisma[modelName].create({ data: body });
   return NextResponse.json(created, { status: 201 });
 }
