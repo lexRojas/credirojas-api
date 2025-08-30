@@ -21,6 +21,21 @@ enum TipoCuota {
 
 /// ===== Tablas =====
 
+
+model Usuario {
+  idUsuario Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  rolId     Int?
+  rol              Rol?       @relation(fields: [rolId], references: [idRol], onUpdate: Cascade)
+  socio   Socio? @relation(fields: [idSocio], references: [idSocio], onUpdate: Cascade, onDelete: SetNull)
+  idSocio          Int?       @unique
+  
+  @@index([rolId])
+  
+    @@map("usuario")
+}
+
 model Variables {
   idVariable   Int      @id @default(autoincrement())
   descripcion  String   @unique
@@ -32,8 +47,7 @@ model Variables {
 model Rol {
   idRol        Int      @id @default(autoincrement())
   descripcion  String
-
-  socios       Socio[]
+  usuarios     Usuario[]
 
   @@map("rol")
 }
@@ -48,7 +62,7 @@ model Socio {
   montoAccion      Decimal?   @db.Decimal(14, 4)
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
   rolId            Int?
-  rol              Rol?       @relation(fields: [rolId], references: [idRol], onUpdate: Cascade)
+  
 
   // Relaciones
   prestamos        Prestamo[]
@@ -56,6 +70,7 @@ model Socio {
   pagos            Pago[]
   solicitudes      Solicitud[]
   votos            Votacion[]
+  usuario          Usuario?
 
   @@map("socio")
 }
