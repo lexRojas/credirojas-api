@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "./prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 // @typescript-eslint/no-explicit-any
 export async function readJson<T = any>(req: NextRequest): Promise<T> {
@@ -36,8 +37,26 @@ export async function createHandler(
 ) {
   const body = await readJson(req);
   console.log(body);
-  // @ts-expect-error porque si
 
-  const created = await prisma[modelName].create({ data: body });
-  return NextResponse.json(created, { status: 201 });
+  try {
+    // @ts-expect-error porque si
+    const created = await prisma[modelName].create({ data: body });
+    return NextResponse.json(created, { status: 201 });
+  } catch (error) {
+    // @ts-expect-error porque si
+    if (error.code === "P2002") {
+      // Si es un error de unicidad, devolver un mensaje adecuado
+      return NextResponse.json(
+        { error: "El valor de un campo único ya existe." },
+        { status: 400 } // Puedes usar 400 (Bad Request) o el código que mejor se ajuste
+      );
+    }
+
+    // Si el error es otro, devolver un error genérico
+    console.error("Error de Prisma:", error);
+    return NextResponse.json(
+      { error: "Hubo un problema al procesar la solicitud." },
+      { status: 500 }
+    );
+  }
 }
