@@ -61,9 +61,9 @@ model Socio {
   fechaSalida      String?
   montoAccion      Decimal?   @db.Decimal(14, 4)
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
+  correo           String    @unique
+  telefono         String?
   
-  
-
   // Relaciones
   prestamos        Prestamo[]
   acciones         Accion[]
@@ -84,7 +84,6 @@ model Accion {
   cantidadAcciones    Int       // número de acciones del monto depositado
   periodo             String?   // ej: "2025-08" o el formato que definas
   pesoMultiplicador   Int?      // número de meses que trabaja ese monto
-
   socio               Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([socioId])
