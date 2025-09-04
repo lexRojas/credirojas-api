@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "./prisma";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
+
 
 // @typescript-eslint/no-explicit-any
 export async function readJson<T = any>(req: NextRequest): Promise<T> {
