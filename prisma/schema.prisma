@@ -22,24 +22,11 @@ enum TipoCuota {
 /// ===== Tablas =====
 
 
-model Usuario {
-  idUsuario Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  rolId     Int?
-  rol              Rol?       @relation(fields: [rolId], references: [idRol], onUpdate: Cascade)
-  socio   Socio? @relation(fields: [idSocio], references: [idSocio], onUpdate: Cascade, onDelete: SetNull)
-  idSocio          Int?       @unique
-  
-  @@index([rolId])
-  
-    @@map("usuario")
-}
-
 model Variables {
   idVariable   Int      @id @default(autoincrement())
   descripcion  String   @unique
-  valor        Decimal  @db.Decimal(14, 4)
+  valor        Float    @db.Float 
+
 
   @@map("variables")
 }
@@ -47,9 +34,10 @@ model Variables {
 model Rol {
   idRol        Int      @id @default(autoincrement())
   descripcion  String
-  usuarios     Usuario[]
+  
 
   @@map("rol")
+  Socio Socio[]
 }
 
 model Socio {
@@ -59,18 +47,21 @@ model Socio {
   fechaNacimiento  String?
   fechaIngreso     String?
   fechaSalida      String?
-  montoAccion      Decimal?   @db.Decimal(14, 4)
+  montoAccion      Float    @db.Float 
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
   correo           String    @unique
   telefono         String?
-  
+  username  String   @unique
+  password  String
+  rolId     Int?
+  rol              Rol?       @relation(fields: [rolId], references: [idRol], onUpdate: Cascade)
   // Relaciones
   prestamos        Prestamo[]
   acciones         Accion[]
   pagos            Pago[]
   solicitudes      Solicitud[]
   votos            Votacion[]
-  usuario          Usuario?
+  
 
   @@index([cedula])  
   @@map("socio")
@@ -80,7 +71,7 @@ model Accion {
   idAccion            Int       @id @default(autoincrement())
   socioId             Int
   fecha               String
-  monto_colones       Decimal   @db.Decimal(14, 4)
+  monto_colones       Float    @db.Float 
   cantidadAcciones    Int       // número de acciones del monto depositado
   periodo             String?   // ej: "2025-08" o el formato que definas
   pesoMultiplicador   Int?      // número de meses que trabaja ese monto
@@ -93,13 +84,13 @@ model Accion {
 model Prestamo {
   idPrestamo               Int        @id @default(autoincrement())
   socioId                  Int
-  monto                    Decimal    @db.Decimal(14, 4)
+  monto                    Float    @db.Float 
   plazo                    Int        // meses
   motivo                   String?
   modalidad                Modalidad
-  saldoCapital             Decimal    @db.Decimal(14, 4)
-  saldoInteresOrdinario    Decimal    @db.Decimal(14, 4)
-  saldoInteresMoratorio    Decimal    @db.Decimal(14, 4)
+  saldoCapital             Float    @db.Float 
+  saldoInteresOrdinario    Float    @db.Float 
+  saldoInteresMoratorio    Float    @db.Float 
 
   socio                    Socio      @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
   pagos                    Pago[]
@@ -115,10 +106,10 @@ model Pago {
   fechaProyectada      String
   fechaReal            String?
   diasAtraso           Int?      // puedes calcularlo en app o trigger
-  monto                Decimal   @db.Decimal(14, 4)
-  interesOrdinario     Decimal   @db.Decimal(14, 4)
+  monto                Float    @db.Float 
+  interesOrdinario     Float    @db.Float 
   tipoCuota            TipoCuota
-  interesExtraordinario Decimal? @db.Decimal(14, 4)
+  interesExtraordinario Float    @db.Float 
 
   socio                Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
   prestamo             Prestamo? @relation(fields: [prestamoId], references: [idPrestamo], onDelete: SetNull, onUpdate: Cascade)
