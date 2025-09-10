@@ -31,7 +31,7 @@ model Variables {
   @@map("variables")
 }
 
-model Rol {
+model Rol { 
   idRol        Int      @id @default(autoincrement())
   descripcion  String
   
@@ -42,7 +42,7 @@ model Rol {
 
 model Socio {
   idSocio          Int        @id @default(autoincrement())
-  cedula           String?     
+  cedula           String    @unique     
   nombre           String
   fechaNacimiento  String?
   fechaIngreso     String?
@@ -74,6 +74,7 @@ model Accion {
   monto_colones       Float    @db.Float 
   cantidadAcciones    Int       // número de acciones del monto depositado
   periodo             String?   // ej: "2025-08" o el formato que definas
+  mes                 String?   // ej: "2025-08" o el formato que definas
   pesoMultiplicador   Int?      // número de meses que trabaja ese monto
   socio               Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
 
