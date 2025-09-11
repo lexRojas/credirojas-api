@@ -85,6 +85,7 @@ model Accion {
 model Prestamo {
   idPrestamo               Int        @id @default(autoincrement())
   socioId                  Int
+  fecha                    String
   monto                    Float    @db.Float 
   plazo                    Int        // meses
   motivo                   String?
