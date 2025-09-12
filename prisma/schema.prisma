@@ -111,7 +111,7 @@ model Pago {
   monto                Float    @db.Float 
   interesOrdinario     Float    @db.Float 
   tipoCuota            TipoCuota
-  interesExtraordinario Float    @db.Float 
+  interesMoratorio     Float    @db.Float 
 
   socio                Socio     @relation(fields: [socioId], references: [idSocio], onDelete: Cascade, onUpdate: Cascade)
   prestamo             Prestamo? @relation(fields: [prestamoId], references: [idPrestamo], onDelete: SetNull, onUpdate: Cascade)
