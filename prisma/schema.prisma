@@ -51,6 +51,9 @@ model Socio {
   multiplicador    Int?       // si quieres decimales, cámbialo a Decimal @db.Decimal(14,4)
   correo           String    @unique
   telefono         String?
+  direccion        String?
+  estado_civil     String?
+  profesion        String?
   username  String   @unique
   password  String
   rolId     Int?
